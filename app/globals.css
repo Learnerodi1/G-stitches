@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+:root {
+  --ground: #1A0E0E;
+  --ivory: #FFF8F0;
+  --signal-red: #C41E3A;
+  --antique-gold: #D4AF37;
+  --pure-white: #FFFFFF;
+  --ease-luxury: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --spring-hover: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --stagger-unit: 100ms;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-ivory: var(--ivory);
+  --color-signal-red: var(--signal-red);
+  --color-antique-gold: var(--antique-gold);
+  --color-pure-white: var(--pure-white);
+  --font-display: var(--font-playfair-display);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ivory);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--signal-red);
+  color: var(--pure-white);
+}
+
+/* ── Display serif headings ── */
+
+.display-serif {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* ── Editorial overlap — magazine cover text treatment ── */
+
+.editorial-overlap {
+  position: absolute;
+  z-index: 0;
+  margin-left: -5vw;
+  margin-right: -5vw;
+  width: calc(100% + 10vw);
+  pointer-events: none;
+  line-height: 0.85;
+  overflow: visible;
+}
+
+/* ── Premium animation utilities ── */
+
+.btn-lift {
+  transition: transform 0.3s var(--ease-luxury), box-shadow 0.3s var(--ease-luxury);
+}
+.btn-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26, 14, 14, 0.3);
+}
+.btn-lift:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(26, 14, 14, 0.2);
+}
+
+.shimmer-gold {
+  background: linear-gradient(110deg, var(--antique-gold) 0%, #e8d48b 40%, var(--antique-gold) 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.divider-draw {
+  height: 1px;
+  background: rgba(212, 175, 55, 0.3);
+  transform-origin: left;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 248, 240, 0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* ── Marquee scrolling strip ── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Modern card hover ── */
+.card-modern {
+  transition: transform 0.4s var(--ease-luxury), box-shadow 0.4s var(--ease-luxury);
+}
+.card-modern:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(26, 14, 14, 0.15), 0 8px 16px rgba(26, 14, 14, 0.08);
+}
+
+/* Product card animations */
+.product-card-lift {
+  transition: transform 0.3s var(--ease-luxury), box-shadow 0.3s var(--ease-luxury);
+}
+.product-card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(196, 30, 58, 0.15);
+}
+
+@keyframes pulse-price {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.price-pulse {
+  animation: pulse-price 2s ease-in-out infinite;
+}
+
+@keyframes heart-pop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.heart-pop {
+  animation: heart-pop 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ── Fluid typography scale ── */
+.fluid-display-xl {
+  font-size: clamp(3rem, 8vw + 1rem, 10rem);
+}
+.fluid-display-lg {
+  font-size: clamp(2.5rem, 5vw + 1rem, 6rem);
+}
+.fluid-display-md {
+  font-size: clamp(2rem, 4vw + 0.5rem, 4.5rem);
+}
+.fluid-body {
+  font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1.125rem);
+}
+
+/* ── Section padding (fluid) ── */
+.section-px {
+  padding-left: clamp(1.25rem, 4vw, 5rem);
+  padding-right: clamp(1.25rem, 4vw, 5rem);
+}
+
+/* ── Gradient section bridges ── */
+.bridge-dark-to-light {
+  height: clamp(4rem, 6vw, 6rem);
+  background: linear-gradient(to bottom, var(--ground), var(--ivory));
+}
+.bridge-light-to-dark {
+  height: clamp(4rem, 6vw, 6rem);
+  background: linear-gradient(to bottom, var(--ivory), var(--ground));
+}
+
+/* ── Elevated card hover ── */
+.card-elevated {
+  transition: transform 0.4s var(--spring-hover), box-shadow 0.4s var(--ease-luxury);
+}
+.card-elevated:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow:
+    0 20px 40px rgba(26, 14, 14, 0.12),
+    0 8px 16px rgba(196, 30, 58, 0.06);
+}
+
+/* ── Motion accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+}
