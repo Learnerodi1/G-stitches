@@ -19,7 +19,7 @@ function NavLink({ href, label, isActive }: { href: string; label: string; isAct
     <Link
       href={href}
       className={`relative text-[11px] font-medium tracking-[0.2em] uppercase transition-colors duration-300 pb-1 font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-sm ${
-        isActive ? "text-ivory" : "text-ivory/60 hover:text-ivory"
+        isActive ? "text-ivory" : "text-ivory/85 hover:text-ivory"
       }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -85,10 +85,10 @@ export default function Navbar() {
         transition={instant || { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] as const }}
       >
         <div className="h-8 flex items-center justify-center text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] uppercase font-sans px-4">
-          <span className="text-ivory/70 truncate">Free Shipping Over &#x20A6;50,000</span>
-          <span className="mx-2 sm:mx-4 text-antique-gold/40 shrink-0">|</span>
-          <span className="text-ivory/70 hidden sm:inline">New Arrivals Weekly</span>
-          <span className="mx-4 text-antique-gold/40 hidden sm:inline">|</span>
+          <span className="text-ivory/90 truncate">Free Shipping Over &#x20A6;50,000</span>
+          <span className="mx-2 sm:mx-4 text-antique-gold/65 shrink-0">|</span>
+          <span className="text-ivory/90 hidden sm:inline">New Arrivals Weekly</span>
+          <span className="mx-4 text-antique-gold/65 hidden sm:inline">|</span>
           <Link
             href="/book-fitting"
             className="text-antique-gold hover:text-ivory transition-colors duration-300 hidden sm:inline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold rounded-sm"
@@ -103,11 +103,11 @@ export default function Navbar() {
         className="fixed w-full z-50"
         animate={{
           top: scrolled ? 0 : 32,
-          backgroundColor: scrolled ? "rgba(26, 14, 14, 0.95)" : "rgba(26, 14, 14, 0.6)",
+          backgroundColor: scrolled ? "rgba(74, 10, 10, 0.95)" : "rgba(74, 10, 10, 0.6)",
           boxShadow: scrolled ? "0 1px 20px rgba(0,0,0,0.3)" : "0 0px 0px rgba(0,0,0,0)",
         }}
         transition={smoothEase}
-        style={{ backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(212, 175, 55, 0.1)" }}
+        style={{ backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(212, 175, 55, 0.1)" }}
         role="navigation"
         aria-label="Main navigation"
       >
@@ -122,7 +122,7 @@ export default function Navbar() {
           {/* LEFT: Hamburger (mobile) + Logo */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
-              className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
+              className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/90 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
               onClick={() => { setMenuOpen(!menuOpen); setSearchOpen(false); }}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
@@ -166,7 +166,7 @@ export default function Navbar() {
           <div className="flex items-center gap-0.5">
             <button
               onClick={() => { setSearchOpen(!searchOpen); setMenuOpen(false); }}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/60 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/85 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
               aria-label={searchOpen ? "Close search" : "Open search"}
               aria-expanded={searchOpen}
             >
@@ -187,7 +187,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={instant || { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] as const }}
-              style={{ backdropFilter: "blur(16px)", borderTop: "1px solid rgba(212, 175, 55, 0.15)" }}
+              style={{ backdropFilter: "blur(8px)", borderTop: "1px solid rgba(212, 175, 55, 0.15)" }}
             >
               <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3 sm:gap-4">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-antique-gold/50 shrink-0" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -197,12 +197,12 @@ export default function Navbar() {
                 <input
                   type="text"
                   placeholder="Search collections..."
-                  className="flex-1 bg-transparent text-ivory text-sm font-sans outline-none placeholder:text-ivory/30 caret-antique-gold focus:placeholder:text-ivory/50 min-h-[44px]"
+                  className="flex-1 bg-transparent text-ivory text-sm font-sans outline-none placeholder:text-ivory/55 caret-antique-gold focus:placeholder:text-ivory/70 min-h-[44px]"
                   autoFocus
                 />
                 <button
                   onClick={() => setSearchOpen(false)}
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/50 hover:text-ivory transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/75 hover:text-ivory transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
                   aria-label="Close search"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -221,7 +221,7 @@ export default function Navbar() {
         {menuOpen && (
           <motion.div
             className="lg:hidden fixed inset-0 z-[200]"
-            style={{ backgroundColor: '#1A0E0E' }}
+            style={{ backgroundColor: '#4A0A0A' }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -238,7 +238,7 @@ export default function Navbar() {
                 </span>
                 <button
                   onClick={closeMenu}
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-ivory transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/90 hover:text-ivory transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
                   aria-label="Close menu"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -260,7 +260,7 @@ export default function Navbar() {
                     <Link
                       href={l.href}
                       className={`block font-sans text-xl sm:text-2xl font-medium py-3 sm:py-3.5 tracking-wide transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-sm ${
-                        pathname === l.href ? "text-ivory" : "text-ivory/50 hover:text-ivory"
+                        pathname === l.href ? "text-ivory" : "text-ivory/80 hover:text-ivory"
                       }`}
                       onClick={closeMenu}
                     >
@@ -297,7 +297,7 @@ export default function Navbar() {
                     <Link
                       key={icon.label}
                       href={icon.href}
-                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/40 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
                       onClick={closeMenu}
                       aria-label={icon.label}
                     >
@@ -307,7 +307,7 @@ export default function Navbar() {
                     </Link>
                   ))}
                 </div>
-                <p className="text-center text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] uppercase font-sans text-antique-gold/40">
+                <p className="text-center text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] uppercase font-sans text-antique-gold/70">
                   Bespoke Fashion &middot; Lagos
                 </p>
               </motion.div>

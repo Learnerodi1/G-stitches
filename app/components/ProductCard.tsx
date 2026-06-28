@@ -45,7 +45,7 @@ export default function ProductCard({
   return (
     <Link href={href} className="block group h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-sm">
       <motion.div
-        className="relative overflow-hidden h-full bg-ground rounded-lg transition-shadow duration-400 hover:shadow-[0_20px_40px_rgba(26,14,14,0.2),0_8px_16px_rgba(196,30,58,0.08)]"
+        className="relative overflow-hidden h-full bg-ground rounded-lg transition-shadow duration-400 hover:shadow-[0_20px_40px_rgba(74,10,10,0.2),0_8px_16px_rgba(255,51,71,0.12)]"
         initial={shouldReduceMotion ? false : { clipPath: "inset(0 0 100% 0)" }}
         whileInView={{ clipPath: "inset(0 0 0% 0)" }}
         viewport={{ once: true }}
@@ -71,9 +71,6 @@ export default function ProductCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </motion.div>
-
-          {/* Dark overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-ground/80 via-ground/20 to-transparent" />
 
           {/* Wishlist button - top right */}
           <motion.button
@@ -103,28 +100,40 @@ export default function ProductCard({
             </motion.svg>
           </motion.button>
 
-          {/* Quick View overlay - centered */}
-          <div className="absolute inset-0 bg-ground/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          {/* Quick View overlay - desktop hover */}
+          <div className="absolute inset-0 bg-ground/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:flex items-center justify-center">
             <motion.button
               onClick={handleQuickView}
-              className="bg-signal-red text-pure-white text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] px-5 sm:px-6 py-3 sm:py-3 rounded-full hover:bg-signal-red/90 transition-colors min-h-11 sm:min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 200, damping: 18, delay: 0.05 }}
+              className="bg-signal-red text-pure-white text-sm font-semibold uppercase tracking-[0.15em] px-6 py-3 rounded-full hover:bg-signal-red/90 transition-colors min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
+              initial={false}
               whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
             >
               Quick View
             </motion.button>
           </div>
+
+          {/* Quick View - mobile always-visible eye button */}
+          {onQuickView && (
+            <button
+              onClick={handleQuickView}
+              aria-label="Quick view"
+              className="sm:hidden absolute bottom-3 left-3 flex items-center gap-1.5 bg-ground/80 text-ivory text-[10px] font-semibold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full border border-ivory/20 z-20"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              View
+            </button>
+          )}
         </div>
 
         {/* Product info section */}
         <div className="p-4 sm:p-4 md:p-5 space-y-2 overflow-hidden">
           {/* Category label */}
           {product.category && (
-            <p className="text-[9px] sm:text-[10px] font-semibold tracking-[0.2em] uppercase text-antique-gold">
+            <p className="text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-antique-gold">
               {product.category}
             </p>
           )}
@@ -136,7 +145,7 @@ export default function ProductCard({
 
           {/* Price */}
           <motion.p
-            className="text-base sm:text-lg font-bold text-signal-red"
+            className="text-base sm:text-lg font-bold text-yellow-400"
             initial={{ opacity: 0.8 }}
             whileHover={{ opacity: 1 }}
           >
@@ -149,7 +158,7 @@ export default function ProductCard({
               e.preventDefault();
               e.stopPropagation();
             }}
-            className="w-full mt-3 py-3 sm:py-3 min-h-11 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] bg-signal-red/10 text-signal-red rounded-md hover:bg-signal-red hover:text-pure-white transition-all duration-300 border border-signal-red/30 hover:border-signal-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red"
+            className="w-full mt-3 py-3 sm:py-3 min-h-11 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] bg-signal-red/10 text-white rounded-md hover:bg-signal-red hover:text-pure-white transition-all duration-300 border border-signal-red/30 hover:border-signal-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red"
             whileHover={shouldReduceMotion ? undefined : { backgroundColor: "rgb(196, 30, 58)" }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
           >

@@ -35,7 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col justify-between font-sans">
         <ScrollProgressBar />
         <Navbar />
-        <main className="flex-1 pt-[88px]">{children}</main>
+        <main className="flex-1 pt-[72px] sm:pt-[80px] md:pt-[88px]">{children}</main>
         <Footer />
       </body>
     </html>

@@ -76,16 +76,16 @@ function HeroParallaxImage() {
       style={{ y }}
     >
       <Image
-        src="/hero-woman-jumpsuit.jpg"
+        src="/tailor-sewing-machine.jpg"
         alt="Woman in stylish outfit"
         fill
         className="object-cover object-top"
         priority
       />
       {/* Bottom gradient for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-ground via-ground/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
       {/* Subtle top vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-ground/30 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
     </motion.div>
   );
 }
@@ -93,7 +93,7 @@ function HeroParallaxImage() {
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <FadeUp>
-      <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-antique-gold mb-3 font-sans">
+      <p className="text-xs font-semibold tracking-[0.3em] uppercase text-antique-gold mb-3 font-sans">
         {children}
       </p>
     </FadeUp>
@@ -188,7 +188,7 @@ export default function Home() {
             {/* Tagline + CTA row */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 sm:gap-8">
               <FadeUp delay={0.8}>
-                <p className="text-ivory/50 max-w-md leading-relaxed text-sm sm:text-[15px] font-sans">
+                <p className="text-ivory/80 max-w-md leading-relaxed text-sm sm:text-[15px] font-sans">
                   Trendy pieces. Timeless styles. G-Stitches has everything you
                   need to rock and feel your best. Premium African fashion,
                   tailored for you.
@@ -212,11 +212,12 @@ export default function Home() {
                   </Link>
                   <Link
                     href="/gallery"
-                    className="btn-lift border border-ivory/30 text-ivory rounded-full px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] hover:bg-ivory hover:text-ground transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
+                    className="btn-lift border border-ivory/55 text-ivory rounded-full px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] hover:bg-ivory hover:text-ground transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
                   >
                     Explore
                   </Link>
                 </div>
+                
               </FadeUp>
             </div>
           </div>
@@ -239,7 +240,7 @@ export default function Home() {
         <div className="marquee-track">
           {[...marqueeItems, ...marqueeItems].map((item, i) => (
             <span key={i} className="flex items-center shrink-0">
-              <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] uppercase text-antique-gold/70 whitespace-nowrap px-6 sm:px-8 font-sans">
+              <span className="text-xs sm:text-[13px] font-semibold tracking-[0.25em] uppercase text-antique-gold/90 whitespace-nowrap px-6 sm:px-8 font-sans">
                 {item}
               </span>
               <span className="w-1 h-1 rounded-full bg-antique-gold/30 shrink-0" />
@@ -288,7 +289,7 @@ export default function Home() {
             <div className="flex justify-center mt-12">
               <Link
                 href="/gallery"
-                className="btn-lift border border-ivory/30 text-ivory rounded-full px-6 sm:px-10 py-3 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-ivory hover:text-ground transition-all duration-300 font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
+                className="btn-lift border border-ivory/55 text-ivory rounded-full px-6 sm:px-10 py-3 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-ivory hover:text-ground transition-all duration-300 font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
               >
                 View All Products
               </Link>
@@ -297,8 +298,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gradient bridge: dark → light */}
-      <div className="bridge-dark-to-light" />
 
       {/* ------------------------------------------------------------------ */}
       {/*  5. SHOP BY CATEGORY -- Ivory section, editorial tall cards         */}
@@ -327,7 +326,6 @@ export default function Home() {
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-ground/80 via-ground/20 to-transparent" />
                     </div>
 
                     {/* Overlapping label -- positioned to break out of the image */}
@@ -339,7 +337,7 @@ export default function Home() {
                         {cat.count}
                       </p>
                       <motion.span
-                        className="inline-block text-xs text-ground/50 mt-2 font-semibold uppercase tracking-[0.15em] font-sans"
+                        className="inline-block text-xs text-ground/75 mt-2 font-semibold uppercase tracking-[0.15em] font-sans"
                         initial={{ opacity: 0, x: -8 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -356,8 +354,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gradient bridge: light → dark */}
-      <div className="bridge-light-to-dark" />
 
       {/* ------------------------------------------------------------------ */}
       {/*  6. PROMO CARDS -- Editorial Asymmetric Layout                      */}
@@ -368,7 +364,7 @@ export default function Home() {
             {/* Card 1 -- Large feature card spanning 2 columns */}
             <FadeUp delay={0} className="md:col-span-2">
               <motion.div
-                className="bg-ivory/[0.04] border border-antique-gold/10 overflow-hidden group card-modern h-full"
+                className="bg-ivory/[0.06] border border-antique-gold/25 overflow-hidden group card-modern h-full"
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               >
@@ -388,7 +384,7 @@ export default function Home() {
                     <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-black uppercase text-ivory leading-[0.95] tracking-tight">
                       New Look
                     </h3>
-                    <p className="text-sm text-ivory/40 leading-relaxed font-sans">
+                    <p className="text-sm text-ivory/75 leading-relaxed font-sans">
                       Explore the latest trends in African fashion. Bold silhouettes, rich textures, and masterful tailoring.
                     </p>
                     <Link
@@ -428,7 +424,7 @@ export default function Home() {
                     duration={1.5}
                     className="!text-left [&_span]:!text-4xl [&_span]:!font-black [&_span]:!text-ground [&_p]:hidden"
                   />
-                  <p className="text-sm text-ground/50 leading-relaxed font-sans">
+                  <p className="text-sm text-ground/75 leading-relaxed font-sans">
                     Refer your friends and get a discount on your next order
                   </p>
                   <Link
@@ -445,7 +441,7 @@ export default function Home() {
           {/* Third promo -- full width strip below */}
           <FadeUp delay={0.24} className="mt-4 sm:mt-5">
             <motion.div
-              className="bg-ivory/[0.04] border border-antique-gold/10 overflow-hidden group card-modern"
+              className="bg-ivory/[0.06] border border-antique-gold/25 overflow-hidden group card-modern"
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             >
@@ -465,12 +461,12 @@ export default function Home() {
                   <h3 className="font-display text-xl sm:text-2xl md:text-3xl font-black uppercase text-ivory leading-[0.95] tracking-tight">
                     Visit Us In Store
                   </h3>
-                  <p className="text-sm text-ivory/40 leading-relaxed max-w-md font-sans">
+                  <p className="text-sm text-ivory/75 leading-relaxed max-w-md font-sans">
                     Experience our collection up close. Feel the fabrics, see the craftsmanship, and find your perfect fit.
                   </p>
                   <Link
                     href="/contact"
-                    className="btn-lift inline-block border border-ivory/30 text-ivory rounded-full px-7 py-3 text-xs font-semibold uppercase tracking-[0.15em] hover:bg-ivory hover:text-ground transition-all duration-300 mt-1 w-fit font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
+                    className="btn-lift inline-block border border-ivory/55 text-ivory rounded-full px-7 py-3 text-xs font-semibold uppercase tracking-[0.15em] hover:bg-ivory hover:text-ground transition-all duration-300 mt-1 w-fit font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory focus-visible:ring-offset-2 focus-visible:ring-offset-ground"
                   >
                     Find a Store
                   </Link>
@@ -508,15 +504,15 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {testimonials.map((t, i) => (
               <FadeUp key={t.name} delay={i * 0.1}>
-                <div className="relative bg-ivory/[0.04] border border-antique-gold/10 p-5 sm:p-6 md:p-8 hover:border-antique-gold/25 transition-all duration-500 h-full card-elevated">
+                <div className="relative bg-ivory/[0.07] border border-antique-gold/25 p-5 sm:p-6 md:p-8 hover:border-antique-gold/50 transition-all duration-500 h-full card-elevated">
                   {/* Large decorative quote mark */}
-                  <span className="absolute top-4 right-5 font-display text-6xl text-antique-gold/15 leading-none select-none">
+                  <span className="absolute top-4 right-5 font-display text-6xl text-antique-gold/30 leading-none select-none">
                     &rdquo;
                   </span>
 
                   <div className="flex items-center gap-3 mb-6">
                     <motion.div
-                      className="w-11 h-11 rounded-full bg-signal-red/20 ring-1 ring-antique-gold/20 flex items-center justify-center text-ivory font-bold text-sm shrink-0 font-display"
+                      className="w-11 h-11 rounded-full bg-signal-red/30 ring-1 ring-antique-gold/30 flex items-center justify-center text-ivory font-bold text-sm shrink-0 font-display"
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
@@ -533,13 +529,13 @@ export default function Home() {
                       <p className="font-semibold text-ivory text-sm font-sans">
                         {t.name}
                       </p>
-                      <p className="text-xs text-ivory/30 font-sans">{t.role}</p>
+                      <p className="text-xs text-ivory/65 font-sans">{t.role}</p>
                     </div>
                   </div>
 
                   <AnimatedStars className="!justify-start mb-4" />
 
-                  <p className="text-sm text-ivory/50 leading-relaxed font-sans">
+                  <p className="text-sm text-ivory/85 leading-relaxed font-sans">
                     &ldquo;{t.review}&rdquo;
                   </p>
                 </div>
@@ -549,8 +545,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gradient bridge: dark → light */}
-      <div className="bridge-dark-to-light" />
 
       {/* ------------------------------------------------------------------ */}
       {/*  8. EXPLORE COLLECTIONS -- Ivory section, creative sizing           */}
@@ -582,20 +576,15 @@ export default function Home() {
               >
                 <Link href="/gallery" className="block group h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-sm">
                   <motion.div
-                    className={`overflow-hidden relative h-full ${
+                    className={`overflow-hidden relative ${
                       i === 0 ? "min-h-[300px] sm:min-h-[400px] md:min-h-[500px]" : "aspect-[3/5]"
                     }`}
                     whileHover="hover"
                   >
                     <motion.div
                       className="absolute inset-0 -top-[10%] -bottom-[10%]"
-                      variants={{
-                        hover: { y: -16, scale: 1.03 },
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        ease: [0.25, 0.1, 0.25, 1],
-                      }}
+                      variants={{ hover: { y: -16, scale: 1.03 } }}
+                      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                     >
                       <Image
                         src={cat.src}
@@ -604,25 +593,13 @@ export default function Home() {
                         className="object-cover"
                       />
                     </motion.div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-ground/70 via-ground/10 to-transparent" />
-
-                    {/* Label at bottom */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-ivory font-sans">
-                        {cat.label}
-                      </span>
-                      <motion.span
-                        className="block text-ivory/40 text-[10px] uppercase tracking-[0.2em] mt-1.5 font-sans"
-                        variants={{
-                          hover: { opacity: 1, y: 0 },
-                        }}
-                        initial={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                      >
-                        Explore &rarr;
-                      </motion.span>
-                    </div>
                   </motion.div>
+                  {/* Label below image */}
+                  <div className="pt-2.5 px-1">
+                    <span className="text-[10px] font-semibold tracking-[0.25em] uppercase text-ground/75 font-sans">
+                      {cat.label}
+                    </span>
+                  </div>
                 </Link>
               </FadeUp>
             ))}

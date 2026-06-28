@@ -57,8 +57,8 @@ export default function TrustBadges({ variant = "dark" }: { variant?: "dark" | "
                   transition={{ duration: 0.3 }}
                   className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 ${
                     isDark
-                      ? "bg-ivory/10 text-ivory/80"
-                      : "bg-ground/5 text-ground"
+                      ? "bg-ivory/20 text-ivory"
+                      : "bg-ground/10 text-ground"
                   }`}
                 >
                   {b.icon}
@@ -67,7 +67,7 @@ export default function TrustBadges({ variant = "dark" }: { variant?: "dark" | "
                   <p className={`text-xs sm:text-sm font-semibold ${isDark ? "text-ivory" : "text-ground"}`}>
                     {b.title}
                   </p>
-                  <p className={`text-[10px] sm:text-xs ${isDark ? "text-ivory/50" : "text-ground/50"}`}>
+                  <p className={`text-[10px] sm:text-xs ${isDark ? "text-ivory/75" : "text-ground/75"}`}>
                     {b.subtitle}
                   </p>
                 </div>

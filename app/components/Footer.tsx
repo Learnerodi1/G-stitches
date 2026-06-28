@@ -26,7 +26,7 @@ const socialLinks = [
 ];
 
 const linkClass =
-  "text-[13px] text-ivory/40 hover:text-ivory transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold rounded-sm";
+  "text-[13px] text-ivory/70 hover:text-ivory transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold rounded-sm";
 
 export default function Footer() {
   const shouldReduceMotion = useReducedMotion();
@@ -59,7 +59,7 @@ export default function Footer() {
                     G-STITCHES
                   </span>
                 </Link>
-                <p className="text-[10px] text-ivory/25 mt-2 font-sans">
+                <p className="text-[10px] text-ivory/60 mt-2 font-sans">
                   2025 G-STITCHES all right reserved
                 </p>
               </div>
@@ -72,13 +72,13 @@ export default function Footer() {
                   Contact
                 </h4>
                 <ul className="space-y-2.5">
-                  <li className="text-[13px] text-ivory/40 font-sans">
+                  <li className="text-[13px] text-ivory/70 font-sans">
                     +234 8012345678
                   </li>
-                  <li className="text-[13px] text-ivory/40 font-sans">
+                  <li className="text-[13px] text-ivory/70 font-sans">
                     info@gstitches.com
                   </li>
-                  <li className="text-[13px] text-ivory/40 font-sans">
+                  <li className="text-[13px] text-ivory/70 font-sans">
                     Lagos, Nigeria
                   </li>
                 </ul>
@@ -142,10 +142,10 @@ export default function Footer() {
         </div>
 
         {/* Newsletter bar */}
-        <div className="border-t border-ivory/[0.08]">
+        <div className="border-t border-ivory/20">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-6 sm:py-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-              <p className="text-[11px] text-ivory/40 tracking-wide font-sans whitespace-nowrap">
+              <p className="text-[11px] text-ivory/70 tracking-wide font-sans whitespace-nowrap">
                 Subscribe for our newsletter
               </p>
               <div className="flex w-full sm:w-auto">
@@ -153,7 +153,7 @@ export default function Footer() {
                   type="email"
                   placeholder="Your email"
                   aria-label="Email for newsletter"
-                  className="flex-1 sm:w-56 min-w-0 bg-transparent border border-ivory/20 border-r-0 focus:border-antique-gold px-3 py-2.5 text-[13px] text-ivory outline-none focus-visible:ring-2 focus-visible:ring-antique-gold transition-colors duration-300 rounded-l-sm placeholder:text-ivory/30 font-sans"
+                  className="flex-1 sm:w-56 min-w-0 bg-transparent border border-ivory/35 border-r-0 focus:border-antique-gold px-3 py-2.5 text-[13px] text-ivory outline-none focus-visible:ring-2 focus-visible:ring-antique-gold transition-colors duration-300 rounded-l-sm placeholder:text-ivory/55 font-sans"
                 />
                 <button className="bg-signal-red hover:bg-signal-red/90 text-pure-white px-4 py-2.5 text-xs font-semibold tracking-wide rounded-r-sm transition-colors duration-300 shrink-0 font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red min-h-[44px]">
                   &rarr;
@@ -168,22 +168,22 @@ export default function Footer() {
         </div>
 
         {/* Bottom strip */}
-        <div className="border-t border-ivory/[0.08]">
+        <div className="border-t border-ivory/20">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[10px] sm:text-[11px] text-ivory/25 tracking-wide font-sans">
+            <p className="text-[10px] sm:text-[11px] text-ivory/60 tracking-wide font-sans">
               &copy; 2026 G-Stitches. All rights reserved.
             </p>
             <div className="flex items-center gap-3 sm:gap-4">
               <Link
                 href="/privacy"
-                className="text-[10px] sm:text-[11px] text-ivory/25 hover:text-ivory/50 transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ivory/30 rounded-sm"
+                className="text-[10px] sm:text-[11px] text-ivory/60 hover:text-ivory/85 transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ivory/50 rounded-sm"
               >
                 Privacy Policy
               </Link>
-              <span className="w-px h-2.5 bg-ivory/10" />
+              <span className="w-px h-2.5 bg-ivory/25" />
               <Link
                 href="/terms"
-                className="text-[10px] sm:text-[11px] text-ivory/25 hover:text-ivory/50 transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ivory/30 rounded-sm"
+                className="text-[10px] sm:text-[11px] text-ivory/60 hover:text-ivory/85 transition-colors duration-300 font-sans focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ivory/50 rounded-sm"
               >
                 Terms of Service
               </Link>

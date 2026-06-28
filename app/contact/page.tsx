@@ -22,7 +22,7 @@ export default function ContactPage() {
       <ParallaxHero
         imageSrc="/clothing-rack.jpg"
         overlayClass="bg-ground/80"
-        height="min-h-[50vh]"
+        height="min-h-[60vh] sm:min-h-[55vh]"
       >
         <div className="flex flex-col items-center justify-center text-center px-4">
           <TextReveal
@@ -30,7 +30,7 @@ export default function ContactPage() {
             className="text-3xl sm:text-5xl md:text-7xl font-bold text-pure-white font-display"
           />
           <FadeUp delay={0.4}>
-            <p className="text-ivory/60 mt-4 text-sm tracking-wide font-sans">
+            <p className="text-ivory/85 mt-4 text-sm tracking-wide font-sans">
               Home / Contact
             </p>
           </FadeUp>
@@ -65,13 +65,13 @@ export default function ContactPage() {
                   type="text"
                   name="firstName"
                   placeholder="Your Name"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent font-sans"
                 />
                 <input
                   type="text"
                   name="lastName"
                   placeholder="Last Name"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent font-sans"
                 />
               </div>
 
@@ -81,13 +81,13 @@ export default function ContactPage() {
                   type="tel"
                   name="phone"
                   placeholder="Phone Number"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent font-sans"
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Email Address"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent font-sans"
                 />
               </div>
 
@@ -97,7 +97,7 @@ export default function ContactPage() {
                   type="text"
                   name="location"
                   placeholder="Location"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent font-sans"
                 />
               </div>
 
@@ -106,7 +106,7 @@ export default function ContactPage() {
                 <textarea
                   name="message"
                   placeholder="Message Here"
-                  className="w-full border-b-2 border-ground/10 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/30 bg-transparent min-h-[140px] resize-y font-sans"
+                  className="w-full border-b-2 border-ground/25 py-4 px-1 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 text-ground placeholder:text-ground/50 bg-transparent min-h-[140px] resize-y font-sans"
                 />
               </div>
 

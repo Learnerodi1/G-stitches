@@ -76,7 +76,7 @@ export default function GalleryPage() {
       <ParallaxHero
         imageSrc="/clothing-rack.jpg"
         overlayClass="bg-ground/85"
-        height="min-h-[60vh]"
+        height="min-h-[65vh] sm:min-h-[60vh]"
       >
         <div className="flex flex-col items-center justify-center text-center px-4">
           <FadeUp>
@@ -102,7 +102,7 @@ export default function GalleryPage() {
           <FadeUp delay={0.6}>
             <div className="relative w-full max-w-md mt-4">
               <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ivory/50"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ivory/75"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -115,7 +115,7 @@ export default function GalleryPage() {
                 type="text"
                 placeholder="Search products..."
                 aria-label="Search products"
-                className="bg-ivory/10 backdrop-blur-md border border-ivory/20 rounded-full px-5 py-3 pl-10 w-full text-sm text-ivory placeholder:text-ivory/50 outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus:border-ivory/40 transition-colors duration-300"
+                className="bg-ivory/10 border border-ivory/40 rounded-full px-5 py-3 pl-10 w-full text-sm text-ivory placeholder:text-ivory/70 outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus:border-ivory/60 transition-colors duration-300"
               />
             </div>
           </FadeUp>
@@ -132,7 +132,7 @@ export default function GalleryPage() {
                 className={`px-6 py-2.5 rounded-full text-sm font-sans font-medium cursor-pointer transition-all duration-300 uppercase tracking-[0.1em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red ${
                   tab.active
                     ? "bg-signal-red text-pure-white shadow-lg"
-                    : "bg-ivory text-ground hover:bg-ground/5 border border-ground/10"
+                    : "bg-ivory text-ground hover:bg-ground/5 border border-ground/25"
                 }`}
               >
                 {tab.label}
@@ -177,7 +177,7 @@ export default function GalleryPage() {
             className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display font-black text-signal-red italic"
           />
           <FadeUp delay={0.3}>
-            <p className="text-ivory/60 font-sans text-sm mt-4 max-w-md mx-auto px-5">
+            <p className="text-ivory/85 font-sans text-sm mt-4 max-w-md mx-auto px-5">
               Limited time only. Shop our curated selection of statement pieces at
               unprecedented prices.
             </p>
@@ -210,15 +210,16 @@ export default function GalleryPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-8">
             {collections.map((col, i) => (
               <FadeUp key={col.name} delay={i * 0.1}>
-                <div className="aspect-[3/4] rounded-lg overflow-hidden relative group cursor-pointer">
-                  <Image
-                    src={col.image}
-                    alt={col.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ground/70 via-ground/20 to-transparent" />
-                  <p className="absolute bottom-4 left-4 right-4 font-sans text-pure-white text-xs font-semibold uppercase tracking-[0.2em]">
+                <div>
+                  <div className="aspect-[3/4] rounded-lg overflow-hidden relative group cursor-pointer">
+                    <Image
+                      src={col.image}
+                      alt={col.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                  <p className="font-sans text-ground/75 text-xs font-semibold uppercase tracking-[0.2em] mt-2 px-1">
                     {col.name}
                   </p>
                 </div>

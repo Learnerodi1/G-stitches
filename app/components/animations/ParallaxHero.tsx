@@ -28,9 +28,16 @@ export default function ParallaxHero({
   const opacity = useTransform(scrollYProgress, [0, 0.8], shouldReduceMotion ? [1, 1] : [1, 0]);
 
   return (
-    <section ref={ref} className={`relative ${height} overflow-hidden flex items-center justify-center`}>
-      <motion.div className="absolute inset-0 -top-[10%] -bottom-[10%]" style={{ y }}>
-        <Image src={imageSrc} alt={imageAlt} fill className="object-cover" priority />
+    <section ref={ref} className={`relative ${height} w-full overflow-hidden flex items-center justify-center`}>
+      <motion.div className="absolute inset-0" style={{ y }}>
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          priority
+        />
       </motion.div>
       <div className={`absolute inset-0 ${overlayClass}`} />
       <motion.div className="relative z-10 w-full" style={{ opacity }}>

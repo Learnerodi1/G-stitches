@@ -146,7 +146,6 @@ export default function ProductQuickView({
                   className="object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ground/40 to-transparent" />
               </div>
 
               {/* Product details */}

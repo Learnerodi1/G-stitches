@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import TrustBadges from "../components/TrustBadges";
 import ParallaxHero from "../components/animations/ParallaxHero";
@@ -42,10 +43,11 @@ const steps = [
 ];
 
 const inputClass =
-  "border-b-2 border-ground/10 py-4 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 w-full bg-transparent text-ground font-sans";
+  "border-b-2 border-ground/25 py-4 text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 w-full bg-transparent text-ground font-sans";
 
 export default function BookFittingPage() {
   const [activeSlot, setActiveSlot] = useState("11:00 AM");
+  const router = useRouter();
 
   return (
     <>
@@ -53,7 +55,7 @@ export default function BookFittingPage() {
       <ParallaxHero
         imageSrc="/designer-sketching.jpg"
         overlayClass="bg-ground/70"
-        height="min-h-[55vh]"
+        height="min-h-[65vh] sm:min-h-[55vh]"
       >
         <div className="flex flex-col items-center justify-center text-center px-6">
           <FadeUp>
@@ -68,7 +70,7 @@ export default function BookFittingPage() {
           />
 
           <FadeUp delay={0.5}>
-            <p className="text-ivory/70 mt-4 max-w-md mx-auto text-center text-sm md:text-base leading-relaxed font-sans">
+            <p className="text-ivory/90 mt-4 max-w-md mx-auto text-center text-sm md:text-base leading-relaxed font-sans">
               Experience the art of bespoke African fashion with a personalised
               fitting session at our atelier.
             </p>
@@ -88,16 +90,16 @@ export default function BookFittingPage() {
             <FadeUp key={step.num} delay={i * 0.15}>
               <div
                 className={`text-center md:text-left px-6 ${
-                  i > 0 ? "md:border-l-2 md:border-ground/10 md:pl-8" : ""
+                  i > 0 ? "md:border-l-2 md:border-ground/25 md:pl-8" : ""
                 }`}
               >
-                <p className="text-5xl font-bold text-ground/10 font-sans">
+                <p className="text-5xl font-bold text-ground/20 font-sans">
                   {step.num}
                 </p>
                 <p className="text-xl font-semibold text-ground mt-2 font-sans">
                   {step.title}
                 </p>
-                <p className="text-sm text-ground/50 mt-2 leading-relaxed font-sans">
+                <p className="text-sm text-ground/75 mt-2 leading-relaxed font-sans">
                   {step.desc}
                 </p>
               </div>
@@ -121,17 +123,17 @@ export default function BookFittingPage() {
                 className="text-2xl md:text-3xl font-semibold text-ground mt-2 font-display"
               />
 
-              <form className="mt-8 space-y-1" onSubmit={(e) => e.preventDefault()}>
+              <form className="mt-8 space-y-1" onSubmit={(e) => { e.preventDefault(); router.push("/checkout"); }}>
                 {/* Name row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                    <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                       First
                     </label>
                     <input type="text" className={inputClass} />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                    <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                       Last
                     </label>
                     <input type="text" className={inputClass} />
@@ -141,13 +143,13 @@ export default function BookFittingPage() {
                 {/* Contact row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                    <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                       Email
                     </label>
                     <input type="email" className={inputClass} />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                    <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                       Phone
                     </label>
                     <input type="tel" className={inputClass} />
@@ -156,7 +158,7 @@ export default function BookFittingPage() {
 
                 {/* Select row */}
                 <div>
-                  <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                  <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                     Select A
                   </label>
                   <select className={inputClass}>
@@ -176,7 +178,7 @@ export default function BookFittingPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
                     <div>
-                      <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                      <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                         Preferred Date
                       </label>
                       <input
@@ -186,7 +188,7 @@ export default function BookFittingPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                      <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                         Preferred Time
                       </label>
                       <input
@@ -198,7 +200,7 @@ export default function BookFittingPage() {
                   </div>
 
                   {/* Time slot buttons */}
-                  <p className="text-xs font-semibold text-ground/50 uppercase tracking-wider mt-6 font-sans">
+                  <p className="text-xs font-semibold text-ground/70 uppercase tracking-wider mt-6 font-sans">
                     Available
                   </p>
                   <div className="flex flex-wrap gap-3 mt-3">
@@ -212,7 +214,7 @@ export default function BookFittingPage() {
                           className={`px-4 py-3 min-h-[44px] rounded-full text-xs font-medium cursor-pointer transition-all duration-300 font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold ${
                             isActive
                               ? "bg-signal-red text-pure-white border-signal-red shadow-lg shadow-signal-red/25 border-2"
-                              : "border-2 border-ground/10 text-ground/50 hover:border-ground hover:text-ground"
+                              : "border-2 border-ground/30 text-ground/75 hover:border-ground hover:text-ground"
                           }`}
                         >
                           {slot.label}
@@ -224,11 +226,11 @@ export default function BookFittingPage() {
 
                 {/* Additional notes */}
                 <div className="pt-4">
-                  <label className="text-xs font-semibold text-ground/50 uppercase tracking-wider font-sans">
+                  <label className="text-xs font-semibold text-ground/70 uppercase tracking-wider font-sans">
                     Additional Notes
                   </label>
                   <textarea
-                    className="border-b-2 border-ground/10 py-4 w-full min-h-[100px] text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 bg-transparent resize-y mt-1 text-ground font-sans"
+                    className="border-b-2 border-ground/25 py-4 w-full min-h-[100px] text-sm outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus:border-signal-red transition-colors duration-300 bg-transparent resize-y mt-1 text-ground font-sans"
                     placeholder="Any special requests or details..."
                   />
                 </div>
@@ -265,7 +267,7 @@ export default function BookFittingPage() {
                 {expectations.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-ground/60 font-sans"
+                    className="flex items-start gap-3 text-sm text-ground/80 font-sans"
                   >
                     <span className="w-5 h-5 bg-signal-red/10 text-signal-red rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">
                       ✓
@@ -277,7 +279,7 @@ export default function BookFittingPage() {
 
               {/* Map placeholder */}
               <div className="bg-ground/5 rounded-2xl h-[160px] w-full mt-6 flex items-center justify-center">
-                <span className="text-sm text-ground/30 font-sans">Map Location</span>
+                <span className="text-sm text-ground/60 font-sans">Map Location</span>
               </div>
             </div>
           </FadeUp>
