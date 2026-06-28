@@ -212,7 +212,7 @@ export default function ProductQuickView({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.25 }}
                 >
-                  <span className="text-3xl sm:text-4xl font-black text-signal-red">
+                  <span className="text-3xl sm:text-4xl font-black text-antique-gold">
                     {product.price}
                   </span>
                   <span className="text-sm text-ivory/50 line-through">
@@ -250,7 +250,7 @@ export default function ProductQuickView({
                         className={`w-11 h-11 flex items-center justify-center border rounded text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold ${
                           selectedSize === size
                             ? "border-signal-red bg-signal-red text-pure-white"
-                            : "border-ivory/30 text-ivory hover:border-signal-red hover:text-signal-red"
+                            : "border-ivory/30 text-ivory hover:border-antique-gold hover:text-antique-gold"
                         }`}
                         whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
                         whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}

@@ -104,7 +104,7 @@ export default function ProductCard({
               fill={isWishlisted ? "currentColor" : "none"}
               stroke="currentColor"
               strokeWidth="2"
-              className="w-4 h-4 sm:w-5 sm:h-5 text-signal-red"
+              className="w-4 h-4 sm:w-5 sm:h-5 text-antique-gold"
               animate={isWishlisted ? { scale: [1, 1.2, 1] } : {}}
               transition={{ duration: 0.3 }}
             >

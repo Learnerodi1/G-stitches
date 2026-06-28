@@ -119,7 +119,7 @@ export default function CheckoutPage() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-signal-red font-bold text-sm font-sans">{fmt(total)}</span>
+            <span className="text-antique-gold font-bold text-sm font-sans">{fmt(total)}</span>
             <motion.svg
               animate={{ rotate: summaryOpen ? 180 : 0 }}
               transition={{ duration: 0.25 }}
@@ -151,12 +151,12 @@ export default function CheckoutPage() {
                   <p className="text-ivory text-xs font-semibold font-sans leading-tight truncate">{item.name}</p>
                   <p className="text-ivory/55 text-[10px] font-sans mt-0.5">Size: {item.size} · Qty: {item.qty}</p>
                 </div>
-                <p className="text-signal-red font-bold text-xs font-sans shrink-0">{fmt(item.price * item.qty)}</p>
+                <p className="text-antique-gold font-bold text-xs font-sans shrink-0">{fmt(item.price * item.qty)}</p>
               </div>
             ))}
             <div className="pt-3 flex justify-between text-sm font-sans">
               <span className="text-ivory/70">Total</span>
-              <span className="text-signal-red font-black">{fmt(total)}</span>
+              <span className="text-antique-gold font-black">{fmt(total)}</span>
             </div>
           </div>
         </motion.div>
@@ -370,7 +370,7 @@ export default function CheckoutPage() {
                     <p className="text-ivory/55 text-xs font-sans pt-1 leading-relaxed">
                       Transfer the exact total amount and upload your receipt below.
                     </p>
-                    <input type="file" accept="image/*" className="w-full text-xs text-ivory/60 font-sans file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:bg-signal-red/20 file:text-signal-red hover:file:bg-signal-red hover:file:text-pure-white file:transition-colors cursor-pointer" />
+                    <input type="file" accept="image/*" className="w-full text-xs text-ivory/60 font-sans file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:uppercase file:tracking-wide file:bg-antique-gold/20 file:text-antique-gold hover:file:bg-antique-gold hover:file:text-ground file:transition-colors cursor-pointer" />
                   </motion.div>
                 )}
 
@@ -406,7 +406,7 @@ export default function CheckoutPage() {
                 <div className="flex items-center justify-between mb-4 px-1">
                   <div>
                     <p className="text-ivory/60 text-xs font-sans uppercase tracking-[0.15em]">Order Total</p>
-                    <p className="text-signal-red font-black text-2xl font-display tabular-nums mt-0.5">{fmt(total)}</p>
+                    <p className="text-antique-gold font-black text-2xl font-display tabular-nums mt-0.5">{fmt(total)}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-ivory/60 text-xs font-sans">
@@ -490,7 +490,7 @@ export default function CheckoutPage() {
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => updateQty(item.id, -1)}
-                            className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-signal-red hover:text-signal-red transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
+                            className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-antique-gold hover:text-antique-gold transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
                             aria-label="Decrease quantity"
                           >
                             −
@@ -500,7 +500,7 @@ export default function CheckoutPage() {
                           </span>
                           <button
                             onClick={() => updateQty(item.id, 1)}
-                            className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-signal-red hover:text-signal-red transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
+                            className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-antique-gold hover:text-antique-gold transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
                             aria-label="Increase quantity"
                           >
                             +
@@ -510,7 +510,7 @@ export default function CheckoutPage() {
 
                       {/* Price */}
                       <div className="text-right shrink-0">
-                        <p className="text-signal-red font-bold text-sm font-sans tabular-nums">
+                        <p className="text-antique-gold font-bold text-sm font-sans tabular-nums">
                           {fmt(item.price * item.qty)}
                         </p>
                         {item.qty > 1 && (
@@ -563,7 +563,7 @@ export default function CheckoutPage() {
                   <div className="h-px bg-antique-gold/25" />
                   <div className="flex justify-between items-baseline">
                     <span className="text-ivory font-bold text-base font-sans">Total</span>
-                    <span className="text-signal-red font-black text-xl font-display tabular-nums">{fmt(total)}</span>
+                    <span className="text-antique-gold font-black text-xl font-display tabular-nums">{fmt(total)}</span>
                   </div>
                 </div>
               </div>

@@ -269,7 +269,7 @@ export default function BookFittingPage() {
                     key={item}
                     className="flex items-start gap-3 text-sm text-ground/80 font-sans"
                   >
-                    <span className="w-5 h-5 bg-signal-red/10 text-signal-red rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">
+                    <span className="w-5 h-5 bg-antique-gold/15 text-antique-gold rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">
                       ✓
                     </span>
                     {item}

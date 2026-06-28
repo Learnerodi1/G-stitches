@@ -109,7 +109,7 @@ export default function CartDrawer() {
                             </p>
                             <button
                               onClick={() => removeItem(item.id)}
-                              className="shrink-0 w-6 h-6 flex items-center justify-center text-ivory/30 hover:text-signal-red transition-colors rounded mt-0.5"
+                              className="shrink-0 w-6 h-6 flex items-center justify-center text-ivory/30 hover:text-ivory transition-colors rounded mt-0.5"
                               aria-label="Remove item"
                             >
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -124,7 +124,7 @@ export default function CartDrawer() {
                           </p>
 
                           {/* Unit price */}
-                          <p className="text-signal-red font-bold font-sans text-xs sm:text-sm">
+                          <p className="text-antique-gold font-bold font-sans text-xs sm:text-sm">
                             {fmt(item.price)}
                           </p>
 
@@ -186,7 +186,7 @@ export default function CartDrawer() {
                   )}
                   <div className="flex justify-between items-baseline pt-2 border-t border-antique-gold/15">
                     <span className="text-ivory font-sans text-xs sm:text-sm font-semibold">Total</span>
-                    <span className="text-signal-red font-display font-black text-base sm:text-lg tabular-nums">{fmt(total)}</span>
+                    <span className="text-antique-gold font-display font-black text-base sm:text-lg tabular-nums">{fmt(total)}</span>
                   </div>
                 </div>
 

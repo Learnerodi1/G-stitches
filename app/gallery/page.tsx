@@ -174,7 +174,7 @@ export default function GalleryPage() {
           <TextReveal
             text="40% OFF"
             as="h2"
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display font-black text-signal-red italic"
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display font-black text-antique-gold italic"
           />
           <FadeUp delay={0.3}>
             <p className="text-ivory/85 font-sans text-sm mt-4 max-w-md mx-auto px-5">

@@ -46,7 +46,7 @@ export default function ContactPage() {
       <section className="bg-ivory py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <FadeUp>
-            <p className="text-sm text-signal-red uppercase tracking-[0.2em] font-sans font-semibold">
+            <p className="text-sm text-antique-gold uppercase tracking-[0.2em] font-sans font-semibold">
               Need Assistance?
             </p>
           </FadeUp>
