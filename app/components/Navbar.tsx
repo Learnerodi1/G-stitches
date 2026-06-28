@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion } from "framer-motion";
+import { useCart } from "../context/CartContext";
+import CartDrawer from "./CartDrawer";
 
 const links = [
   { href: "/", label: "Home" },
@@ -42,6 +44,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { cartCount, openCart } = useCart();
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 50));
@@ -163,17 +166,40 @@ export default function Navbar() {
           </div>
 
           {/* RIGHT: Utility icons */}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center shrink-0">
             <button
               onClick={() => { setSearchOpen(!searchOpen); setMenuOpen(false); }}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/85 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
+              className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-ivory/85 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
               aria-label={searchOpen ? "Close search" : "Open search"}
               aria-expanded={searchOpen}
             >
-              <svg className="w-[18px] h-[18px] sm:w-[19px] sm:h-[19px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+              <svg className="w-[17px] h-[17px] sm:w-[19px] sm:h-[19px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8" />
                 <path strokeLinecap="round" d="m21 21-4.35-4.35" />
               </svg>
+            </button>
+
+            {/* Cart icon with badge — badge positioned relative to the icon itself */}
+            <button
+              onClick={() => { openCart(); setMenuOpen(false); setSearchOpen(false); }}
+              className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-ivory/85 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
+              aria-label={`Open cart${cartCount > 0 ? ` (${cartCount})` : ""}`}
+            >
+              <span className="relative inline-flex">
+                <svg className="w-[17px] h-[17px] sm:w-[19px] sm:h-[19px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                </svg>
+                {cartCount > 0 && (
+                  <motion.span
+                    key={cartCount}
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1.5 -right-1.5 w-[14px] h-[14px] bg-signal-red text-pure-white text-[8px] font-bold rounded-full flex items-center justify-center font-sans leading-none"
+                  >
+                    {cartCount > 9 ? "9+" : cartCount}
+                  </motion.span>
+                )}
+              </span>
             </button>
           </div>
         </motion.div>
@@ -292,7 +318,6 @@ export default function Navbar() {
                   {[
                     { href: "/account", label: "Account", d: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" },
                     { href: "/wishlist", label: "Wishlist", d: "M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" },
-                    { href: "/cart", label: "Cart", d: "M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" },
                   ].map((icon) => (
                     <Link
                       key={icon.label}
@@ -306,6 +331,21 @@ export default function Navbar() {
                       </svg>
                     </Link>
                   ))}
+                  {/* Cart button — opens drawer */}
+                  <button
+                    className="relative min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
+                    onClick={() => { closeMenu(); openCart(); }}
+                    aria-label="Open cart"
+                  >
+                    <svg className="w-5 h-5 sm:w-[22px] sm:h-[22px]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                    </svg>
+                    {cartCount > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-signal-red text-pure-white text-[9px] font-bold rounded-full flex items-center justify-center font-sans">
+                        {cartCount > 9 ? "9+" : cartCount}
+                      </span>
+                    )}
+                  </button>
                 </div>
                 <p className="text-center text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] uppercase font-sans text-antique-gold/70">
                   Bespoke Fashion &middot; Lagos
@@ -315,6 +355,9 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Cart drawer */}
+      <CartDrawer />
     </>
   );
 }

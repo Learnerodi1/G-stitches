@@ -85,7 +85,7 @@ const stickyPanels = [
 
 export default function AboutPage() {
   return (
-    <div>
+    <>
       {/* ===== 1. PARALLAX HERO ===== */}
       <ParallaxHero
         imageSrc="/designer-sketching.jpg"
@@ -252,6 +252,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }

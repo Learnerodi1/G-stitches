@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 interface Product {
   src: string;
@@ -27,7 +28,18 @@ export default function ProductCard({
   href = "/gallery",
 }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [added, setAdded] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const { addItem, openCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem(product, "M");
+    openCart();
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -152,17 +164,17 @@ export default function ProductCard({
             {product.price}
           </motion.p>
 
-          {/* Add to Cart button - Mobile CTA */}
+          {/* Add to Cart button */}
           <motion.button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            className="w-full mt-3 py-3 sm:py-3 min-h-11 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] bg-signal-red/10 text-white rounded-md hover:bg-signal-red hover:text-pure-white transition-all duration-300 border border-signal-red/30 hover:border-signal-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red"
-            whileHover={shouldReduceMotion ? undefined : { backgroundColor: "rgb(196, 30, 58)" }}
+            onClick={handleAddToCart}
+            className={`w-full mt-3 py-3 sm:py-3 min-h-11 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] rounded-md transition-all duration-300 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red ${
+              added
+                ? "bg-antique-gold border-antique-gold text-ground"
+                : "bg-signal-red/10 text-white border-signal-red/30 hover:bg-signal-red hover:text-pure-white hover:border-signal-red"
+            }`}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
           >
-            Add to Cart
+            {added ? "Added ✓" : "Add to Cart"}
           </motion.button>
         </div>
       </motion.div>

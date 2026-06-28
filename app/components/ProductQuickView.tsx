@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import AnimatedStars from "./AnimatedStars";
+import { useCart } from "../context/CartContext";
 
 interface Product {
   src: string;
@@ -25,7 +26,16 @@ export default function ProductQuickView({
   onClose,
 }: ProductQuickViewProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedSize, setSelectedSize] = useState("M");
   const shouldReduceMotion = useReducedMotion();
+  const { addItem, openCart } = useCart();
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    addItem(product, selectedSize);
+    onClose();
+    openCart();
+  };
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -79,7 +89,7 @@ export default function ProductQuickView({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-ground/80 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-ground/80 backdrop-blur-sm z-[400]"
           />
 
           {/* Modal/Drawer Container */}
@@ -89,15 +99,15 @@ export default function ProductQuickView({
             animate="visible"
             exit="exit"
             transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            className={`fixed z-50 ${
+            className={`fixed z-[401] ${
               isMobile
                 ? "bottom-0 left-0 right-0 rounded-t-2xl"
                 : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl"
-            } bg-ground`}
+            } bg-ground overflow-hidden`}
             style={{
               width: isMobile ? "100%" : "90%",
               maxWidth: isMobile ? "100%" : "600px",
-              height: isMobile ? "85vh" : "auto",
+              height: isMobile ? "85vh" : "90vh",
             }}
           >
             {/* Close button */}
@@ -129,14 +139,14 @@ export default function ProductQuickView({
               initial="hidden"
               animate="visible"
               exit="exit"
-              className={`flex flex-col ${isMobile ? "h-full" : ""}`}
+              className="flex flex-col h-full"
             >
               {/* Image section */}
               <div
-                className={`relative overflow-hidden bg-ground ${
+                className={`relative overflow-hidden bg-ground shrink-0 ${
                   isMobile
-                    ? "h-72 sm:h-96"
-                    : "w-full aspect-[3/4] max-h-96"
+                    ? "h-64 sm:h-80"
+                    : "w-full aspect-[4/3] max-h-72"
                 }`}
               >
                 <Image
@@ -150,7 +160,7 @@ export default function ProductQuickView({
 
               {/* Product details */}
               <div
-                className={`flex-1 overflow-y-auto ${
+                className={`flex-1 overflow-y-auto min-h-0 ${
                   isMobile
                     ? "p-5 sm:p-6"
                     : "p-6 sm:p-8"
@@ -232,11 +242,16 @@ export default function ProductQuickView({
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-antique-gold">
                     Available Sizes
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                       <motion.button
                         key={size}
-                        className="w-11 h-11 flex items-center justify-center border border-ivory/30 rounded text-ivory text-sm font-semibold hover:border-signal-red hover:text-signal-red transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold"
+                        onClick={() => setSelectedSize(size)}
+                        className={`w-11 h-11 flex items-center justify-center border rounded text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold ${
+                          selectedSize === size
+                            ? "border-signal-red bg-signal-red text-pure-white"
+                            : "border-ivory/30 text-ivory hover:border-signal-red hover:text-signal-red"
+                        }`}
                         whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
                         whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                       >
@@ -249,7 +264,7 @@ export default function ProductQuickView({
 
               {/* CTA Buttons */}
               <div
-                className={`flex gap-3 border-t border-ivory/10 ${
+                className={`flex gap-3 border-t border-ivory/10 shrink-0 ${
                   isMobile
                     ? "p-5 sm:p-6"
                     : "p-6 sm:p-8"
@@ -264,11 +279,12 @@ export default function ProductQuickView({
                   Close
                 </motion.button>
                 <motion.button
+                  onClick={handleAddToCart}
                   className="flex-1 py-3 sm:py-4 bg-signal-red text-pure-white rounded-lg hover:bg-signal-red/90 transition-colors font-semibold uppercase text-xs sm:text-sm tracking-[0.15em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red"
                   whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                   whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                 >
-                  Add to Cart
+                  Add to Cart — {selectedSize}
                 </motion.button>
               </div>
             </motion.div>

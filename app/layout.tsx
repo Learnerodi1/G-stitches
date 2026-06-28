@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollProgressBar from "./components/animations/ScrollProgressBar";
+import Providers from "./components/Providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,10 +34,12 @@ export default function RootLayout({
       className={`${inter.variable} ${playfairDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col justify-between font-sans">
-        <ScrollProgressBar />
-        <Navbar />
-        <main className="flex-1 pt-[72px] sm:pt-[80px] md:pt-[88px]">{children}</main>
-        <Footer />
+        <Providers>
+          <ScrollProgressBar />
+          <Navbar />
+          <main className="flex-1 pt-[72px] sm:pt-[80px] md:pt-[88px]">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

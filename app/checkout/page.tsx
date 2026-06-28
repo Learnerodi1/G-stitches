@@ -7,12 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import FadeUp from "../components/animations/FadeUp";
 import ParallaxHero from "../components/animations/ParallaxHero";
 import TextReveal from "../components/animations/TextReveal";
-
-const cartItems = [
-  { src: "/women-maroon-african-dress.jpg", name: "Maroon African Dress", category: "Women", size: "M", price: 45000 },
-  { src: "/men-pink-agbada.jpg",            name: "Classic Pink Agbada",   category: "Men",   size: "L", price: 52000 },
-  { src: "/women-ankara-teal-gown.jpg",     name: "Ankara Teal Gown",      category: "Women", size: "S", price: 42000 },
-];
+import { useCart } from "../context/CartContext";
 
 const steps = ["Information", "Payment", "Confirmation"];
 
@@ -22,19 +17,13 @@ const inputClass =
 type PayMethod = "card" | "transfer" | "paypal";
 
 export default function CheckoutPage() {
-  const [quantities, setQuantities] = useState<number[]>(cartItems.map(() => 1));
+  const { items: cartItems, updateQty } = useCart();
   const [payMethod, setPayMethod] = useState<PayMethod>("card");
   const [promoCode, setPromoCode] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  const adjust = (i: number, delta: number) => {
-    setQuantities((prev) =>
-      prev.map((q, idx) => (idx === i ? Math.max(1, q + delta) : q))
-    );
-  };
-
-  const subtotal = cartItems.reduce((sum, item, i) => sum + item.price * quantities[i], 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
   const shipping = subtotal >= 50000 ? 0 : 3000;
   const total = subtotal + shipping;
   const fmt = (n: number) => `₦${n.toLocaleString()}`;
@@ -126,7 +115,7 @@ export default function CheckoutPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
             </svg>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-antique-gold font-sans">
-              {summaryOpen ? "Hide" : "Show"} Order Summary ({cartItems.length} items)
+              {summaryOpen ? "Hide" : "Show"} Order Summary ({cartItems.reduce((s, i) => s + i.qty, 0)} items)
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -153,16 +142,16 @@ export default function CheckoutPage() {
           className="overflow-hidden"
         >
           <div className="px-5 sm:px-8 pb-4 divide-y divide-antique-gold/15">
-            {cartItems.map((item, i) => (
-              <div key={item.name} className="py-3 flex items-center gap-3">
+            {cartItems.map((item) => (
+              <div key={item.id} className="py-3 flex items-center gap-3">
                 <div className="relative w-12 h-16 shrink-0 rounded-md overflow-hidden">
-                  <Image src={item.src} alt={item.name} fill className="object-cover" sizes="48px" />
+                  <Image src={item.src} alt={item.alt} fill className="object-cover" sizes="48px" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-ivory text-xs font-semibold font-sans leading-tight truncate">{item.name}</p>
-                  <p className="text-ivory/55 text-[10px] font-sans mt-0.5">Size: {item.size} · Qty: {quantities[i]}</p>
+                  <p className="text-ivory/55 text-[10px] font-sans mt-0.5">Size: {item.size} · Qty: {item.qty}</p>
                 </div>
-                <p className="text-signal-red font-bold text-xs font-sans shrink-0">{fmt(item.price * quantities[i])}</p>
+                <p className="text-signal-red font-bold text-xs font-sans shrink-0">{fmt(item.price * item.qty)}</p>
               </div>
             ))}
             <div className="pt-3 flex justify-between text-sm font-sans">
@@ -427,7 +416,7 @@ export default function CheckoutPage() {
                         <>Shipping: {fmt(shipping)}</>
                       )}
                     </p>
-                    <p className="text-ivory/50 text-[10px] font-sans mt-0.5">{cartItems.length} items</p>
+                    <p className="text-ivory/50 text-[10px] font-sans mt-0.5">{cartItems.reduce((s, i) => s + i.qty, 0)} items</p>
                   </div>
                 </div>
 
@@ -473,11 +462,18 @@ export default function CheckoutPage() {
 
                 {/* Items */}
                 <div className="divide-y divide-antique-gold/15">
-                  {cartItems.map((item, i) => (
-                    <div key={item.name} className="px-5 xl:px-6 py-4 flex gap-4 items-center">
+                  {cartItems.length === 0 ? (
+                    <div className="px-6 py-10 text-center">
+                      <p className="text-ivory/50 text-sm font-sans">Your cart is empty.</p>
+                      <Link href="/gallery" className="text-antique-gold text-sm font-sans hover:text-ivory transition-colors mt-2 inline-block">
+                        Shop Now →
+                      </Link>
+                    </div>
+                  ) : cartItems.map((item) => (
+                    <div key={item.id} className="px-5 xl:px-6 py-4 flex gap-4 items-center">
                       {/* Thumbnail */}
                       <div className="relative w-14 xl:w-16 h-18 xl:h-20 shrink-0 rounded-lg overflow-hidden bg-ground">
-                        <Image src={item.src} alt={item.name} fill className="object-cover" sizes="64px" />
+                        <Image src={item.src} alt={item.alt} fill className="object-cover" sizes="64px" />
                       </div>
 
                       {/* Info */}
@@ -493,17 +489,17 @@ export default function CheckoutPage() {
                         {/* Qty controls */}
                         <div className="flex items-center gap-2 mt-2">
                           <button
-                            onClick={() => adjust(i, -1)}
+                            onClick={() => updateQty(item.id, -1)}
                             className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-signal-red hover:text-signal-red transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
                             aria-label="Decrease quantity"
                           >
                             −
                           </button>
                           <span className="text-ivory text-sm font-semibold font-sans w-5 text-center tabular-nums">
-                            {quantities[i]}
+                            {item.qty}
                           </span>
                           <button
-                            onClick={() => adjust(i, 1)}
+                            onClick={() => updateQty(item.id, 1)}
                             className="w-7 h-7 rounded-full border border-antique-gold/30 text-ivory/70 hover:border-signal-red hover:text-signal-red transition-colors flex items-center justify-center text-base leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-antique-gold"
                             aria-label="Increase quantity"
                           >
@@ -515,9 +511,9 @@ export default function CheckoutPage() {
                       {/* Price */}
                       <div className="text-right shrink-0">
                         <p className="text-signal-red font-bold text-sm font-sans tabular-nums">
-                          {fmt(item.price * quantities[i])}
+                          {fmt(item.price * item.qty)}
                         </p>
-                        {quantities[i] > 1 && (
+                        {item.qty > 1 && (
                           <p className="text-ivory/45 text-[10px] font-sans mt-0.5 tabular-nums">
                             {fmt(item.price)} ea
                           </p>
@@ -549,7 +545,7 @@ export default function CheckoutPage() {
                 {/* Totals */}
                 <div className="px-5 xl:px-6 py-5 border-t border-antique-gold/20 space-y-3">
                   <div className="flex justify-between text-sm font-sans">
-                    <span className="text-ivory/70">Subtotal ({cartItems.length} items)</span>
+                    <span className="text-ivory/70">Subtotal ({cartItems.reduce((s, i) => s + i.qty, 0)} items)</span>
                     <span className="text-ivory font-semibold tabular-nums">{fmt(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm font-sans">
