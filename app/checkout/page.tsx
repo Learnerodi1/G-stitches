@@ -2,14 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useState, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import FadeUp from "../components/animations/FadeUp";
 import ParallaxHero from "../components/animations/ParallaxHero";
 import TextReveal from "../components/animations/TextReveal";
 import { useCart } from "../context/CartContext";
-import { usePaystackPayment } from "react-paystack";
 import { supabase } from "../lib/supabaseClient";
+import type { PaystackCheckoutHandle } from "../components/PaystackCheckout";
+
+// Loaded client-only (ssr: false). This is the fix for the
+// "ReferenceError: window is not defined" build error — react-paystack
+// touches `window` internally, which crashes if it's ever rendered on
+// the server during static prerendering. ssr:false guarantees it only
+// ever mounts in the browser.
+const PaystackCheckout = dynamic(() => import("../components/PaystackCheckout"), {
+  ssr: false,
+});
 
 const steps = ["Information", "Payment", "Confirmation"];
 
@@ -27,6 +37,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const formRef = useRef<HTMLFormElement>(null);
+  const paystackRef = useRef<PaystackCheckoutHandle>(null);
   // Stable reference per checkout session
   const [payRef] = useState(() => `gstitches_${Date.now()}`);
 
@@ -35,24 +46,66 @@ export default function CheckoutPage() {
   const total = subtotal + shipping;
   const fmt = (n: number) => `₦${n.toLocaleString()}`;
 
-  const initializePayment = usePaystackPayment({
-    reference: payRef,
-    email,
-    amount: total * 100, // kobo
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
-    currency: "NGN",
-  });
+  const handlePaymentSuccess = async (reference: { reference: string }) => {
+    setIsSubmitting(true);
+    const formElement = formRef.current;
+    const formData = formElement ? new FormData(formElement) : new FormData();
 
-  const handlePlaceOrder = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      const { data: order } = await supabase
+        .from("orders")
+        .insert({
+          user_id: user?.id ?? null,
+          first_name: formData.get("firstName"),
+          last_name: formData.get("lastName"),
+          email,
+          phone: formData.get("phone"),
+          street_address: formData.get("streetAddress"),
+          city: formData.get("city"),
+          state: formData.get("state"),
+          postal_code: formData.get("postalCode"),
+          subtotal,
+          shipping,
+          total,
+          payment_reference: reference.reference,
+          payment_status: "paid",
+        })
+        .select()
+        .single();
+
+      if (order) {
+        const orderItems = cartItems.map((i) => ({
+          order_id: order.id,
+          name: i.name,
+          size: i.size,
+          price: i.price,
+          quantity: i.qty,
+        }));
+        await supabase.from("order_items").insert(orderItems);
+      }
+    } catch (err) {
+      console.error("Order save error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    clearCart();
+    alert(
+      `Order placed successfully!\nReference: ${reference.reference}\n\nThank you for shopping with G-Stitches.`
+    );
+  };
+
+  const handlePaymentClose = () => {
+    console.log("Payment window closed.");
+  };
+
+  const handlePlaceOrder = () => {
     if (cartItems.length === 0) {
       alert("Your cart is empty.");
       return;
     }
-
-    const formElement = formRef.current;
-    if (!formElement) return;
-
-    const formData = new FormData(formElement);
 
     if (!email) {
       alert("Please enter your email address.");
@@ -64,59 +117,12 @@ export default function CheckoutPage() {
       return;
     }
 
-    const onSuccess = async (reference: { reference: string }) => {
-      setIsSubmitting(true);
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
+    if (!paystackRef.current) {
+      alert("Payment is still loading — please try again in a moment.");
+      return;
+    }
 
-        const { data: order } = await supabase
-          .from("orders")
-          .insert({
-            user_id: user?.id ?? null,
-            first_name: formData.get("firstName"),
-            last_name: formData.get("lastName"),
-            email,
-            phone: formData.get("phone"),
-            street_address: formData.get("streetAddress"),
-            city: formData.get("city"),
-            state: formData.get("state"),
-            postal_code: formData.get("postalCode"),
-            subtotal,
-            shipping,
-            total,
-            payment_reference: reference.reference,
-            payment_status: "paid",
-          })
-          .select()
-          .single();
-
-        if (order) {
-          const orderItems = cartItems.map((i) => ({
-            order_id: order.id,
-            name: i.name,
-            size: i.size,
-            price: i.price,
-            quantity: i.qty,
-          }));
-          await supabase.from("order_items").insert(orderItems);
-        }
-      } catch (err) {
-        console.error("Order save error:", err);
-      } finally {
-        setIsSubmitting(false);
-      }
-
-      clearCart();
-      alert(
-        `Order placed successfully!\nReference: ${reference.reference}\n\nThank you for shopping with G-Stitches.`
-      );
-    };
-
-    const onClose = () => {
-      console.log("Payment window closed.");
-    };
-
-    initializePayment({ onSuccess, onClose });
+    paystackRef.current.open();
   };
 
   return (
@@ -712,6 +718,19 @@ export default function CheckoutPage() {
         </div>
       </div>
       </div>
+
+      {/* Client-only Paystack integration — never rendered on the server */}
+      {process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY && (
+        <PaystackCheckout
+          ref={paystackRef}
+          email={email}
+          amount={total * 100}
+          reference={payRef}
+          publicKey={process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY}
+          onSuccess={handlePaymentSuccess}
+          onClose={handlePaymentClose}
+        />
+      )}
     </>
   );
 }
