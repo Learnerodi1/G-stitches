@@ -63,8 +63,8 @@ export default function SignUpPage() {
     if (signUpError) {
       // Show the most useful part of the error
       const msg = signUpError.message
-        || (signUpError as Record<string, unknown>).error_description as string
-        || `Error code: ${(signUpError as Record<string, unknown>).status ?? "unknown"}`;
+  || (signUpError as unknown as Record<string, unknown>).error_description as string
+  || `Error code: ${(signUpError as unknown as Record<string, unknown>).status ?? "unknown"}`;
       setError(msg || "Sign up failed. Your Supabase project may be paused at supabase.com.");
       setLoading(false);
       return;
