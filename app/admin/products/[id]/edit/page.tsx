@@ -11,7 +11,7 @@ import {
   inputClass,
   selectClass,
   Toggle,
-} from "../../components/ui";
+} from "../../../components/ui";
 
 const CATEGORIES = ["Women", "Men", "Accessories", "Bespoke"];
 
