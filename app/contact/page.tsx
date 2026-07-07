@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 import TrustBadges from "../components/TrustBadges";
 import ParallaxHero from "../components/animations/ParallaxHero";
 import FadeUp from "../components/animations/FadeUp";
@@ -16,6 +18,30 @@ const galleryImages = [
 ];
 
 export default function ContactPage() {
+  const [sent, setSent] = useState(false)
+
+  const handleSubmit =  async (e : React.FormEvent<HTMLFormElement> ) => {
+    e.preventDefault();
+
+    let formData  = new FormData(e.currentTarget);
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const {error} = await supabase.from("contact_messages").insert({
+      user_id: user?.id ?? null,
+      first_name: formData.get("firstName"),
+      last_name: formData.get("lastName"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      location: formData.get("location"),
+      message: formData.get("message"),
+    });
+    if(!error){
+      setSent(true);
+      e.currentTarget.reset();
+    }
+  };
+
   return (
     <>
       {/* ── PARALLAX HERO ── */}
@@ -58,7 +84,12 @@ export default function ContactPage() {
           />
 
           <FadeUp delay={0.3}>
-            <form action="#" method="POST" className="mt-12">
+            {sent && (
+                  <p className="text-antique-gold text-sm font-sans mb-4">
+                    Thank you! We've received your message and will get back to you soon.
+                  </p>
+                )}
+            <form onSubmit={handleSubmit} method="POST" className="mt-12">
               {/* Row 1 -- Name fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-6">
                 <input

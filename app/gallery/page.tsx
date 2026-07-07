@@ -2,11 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { mapProduct } from "../lib/mapProduct";
 import ParallaxHero from "../components/animations/ParallaxHero";
 import FadeUp from "../components/animations/FadeUp";
 import TextReveal from "../components/animations/TextReveal";
 import ProductGrid from "../components/ProductGrid";
+import ProductSkeleton from "../components/ProductSkeleton";
 import ProductQuickView from "../components/ProductQuickView";
 
 interface Product {
@@ -17,7 +20,7 @@ interface Product {
   category?: string;
 }
 
-const products: Product[] = [
+const fallbackProducts: Product[] = [
   { src: "/women-maroon-african-dress.jpg", alt: "Maroon African Dress", name: "Maroon African Dress", price: "₦55,000", category: "Women" },
   { src: "/women-red-lace-dress.jpg", alt: "Red Lace Evening Dress", name: "Red Lace Evening Dress", price: "₦65,000", category: "Women" },
   { src: "/men-black-top.jpg", alt: "Black Casual Top", name: "Black Casual Top", price: "₦30,000", category: "Men" },
@@ -26,49 +29,53 @@ const products: Product[] = [
   { src: "/hero-woman-brown-outfit.jpg", alt: "Embroidered Brown Outfit", name: "Embroidered Brown Outfit", price: "₦45,000", category: "Women" },
   { src: "/men-maroon-stripe.jpg", alt: "Maroon Stripe Ensemble", name: "Maroon Stripe Ensemble", price: "₦70,000", category: "Men" },
   { src: "/men-maroon-sunglasses.jpg", alt: "Maroon Casual Look", name: "Maroon Casual Look", price: "₦35,000", category: "Men" },
-  { src: "/women-maroon-beaded-gown.jpg", alt: "Beaded Maroon Gown", name: "Beaded Maroon Gown", price: "₦68,000", category: "Women" },
-  { src: "/hero-woman-jumpsuit.jpg", alt: "Chic Jumpsuit", name: "Chic Jumpsuit", price: "₦42,000", category: "Women" },
-  { src: "/men-pink-agbada.jpg", alt: "Pink Agbada Set", name: "Pink Agbada Set", price: "₦58,000", category: "Men" },
-  { src: "/women-ankara-teal-gown.jpg", alt: "Teal Ankara Gown", name: "Teal Ankara Gown", price: "₦52,000", category: "Women" },
-  { src: "/women-black-velvet-gown.jpg", alt: "Black Velvet Evening Gown", name: "Black Velvet Evening Gown", price: "₦85,000", category: "Women" },
-  { src: "/women-maroon-cape-gown.jpg", alt: "Maroon Cape Gown", name: "Maroon Cape Gown", price: "₦78,000", category: "Women" },
-  { src: "/women-ankara-sculpture-gown.jpg", alt: "Ankara Sculpture Gown", name: "Ankara Sculpture Gown", price: "₦72,000", category: "Women" },
-  { src: "/women-red-xo-jumpsuit.jpg", alt: "Red XO Print Jumpsuit", name: "Red XO Print Jumpsuit", price: "₦46,000", category: "Women" },
-  { src: "/men-maroon-kaftan-set.jpg", alt: "Maroon Kaftan Set", name: "Maroon Kaftan Set", price: "₦40,000", category: "Men" },
-  { src: "/men-maroon-asymmetric-top.jpg", alt: "Maroon Asymmetric Top", name: "Maroon Asymmetric Top", price: "₦38,000", category: "Men" },
-  { src: "/women-red-lace-aso-oke.jpg", alt: "Red Lace Aso Oke", name: "Red Lace Aso Oke", price: "₦92,000", category: "Women" },
-  { src: "/women-maroon-tribal-gown.jpg", alt: "Maroon Tribal Gown", name: "Maroon Tribal Gown", price: "₦75,000", category: "Women" },
-  { src: "/women-purple-ankara-gown.jpg", alt: "Purple Ankara Gown", name: "Purple Ankara Gown", price: "₦68,000", category: "Women" },
-  { src: "/men-black-designer-top.jpg", alt: "Black Designer Top", name: "Black Designer Top", price: "₦32,000", category: "Men" },
-  { src: "/women-brown-palazzo-set.jpg", alt: "Brown Palazzo Set", name: "Brown Palazzo Set", price: "₦44,000", category: "Women" },
-  { src: "/men-pink-agbada-fila.jpg", alt: "Pink Agbada with Fila", name: "Pink Agbada with Fila", price: "₦62,000", category: "Men" },
-  { src: "/men-maroon-senator.jpg", alt: "Maroon Senator Style", name: "Maroon Senator Style", price: "₦48,000", category: "Men" },
 ];
 
-const filters = [
-  { label: "Outfits", active: false },
-  { label: "All", active: true },
-  { label: "Accessories", active: false },
-  { label: "Women", active: false },
-  { label: "Men", active: false },
-];
+const FILTER_LABELS = ["All", "Women", "Men", "Accessories", "Bespoke"];
 
 const collections = [
   { name: "Date Night", image: "/women-red-lace-dress.jpg" },
   { name: "Night Vibes", image: "/women-black-gown.jpg" },
   { name: "Weddings", image: "/women-maroon-beaded-gown.jpg" },
-  { name: "Everyday wears", image: "/men-maroon-casual.jpg" },
+  { name: "Everyday Wears", image: "/men-maroon-casual.jpg" },
   { name: "Outings", image: "/hero-woman-brown-outfit.jpg" },
 ];
 
 export default function GalleryPage() {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const handleQuickView = (product: Product) => {
     setQuickViewProduct(product);
     setIsQuickViewOpen(true);
   };
+
+  useEffect(() => {
+    setLoading(true);
+    let q = supabase.from("products").select("*").eq("in_stock", true);
+    if (activeFilter !== "All") q = q.eq("category", activeFilter);
+    q.order("created_at", { ascending: false }).then(({ data }) => {
+      if (data && data.length > 0) {
+        setAllProducts(data.map(mapProduct));
+      } else if (activeFilter === "All") {
+        setAllProducts(fallbackProducts);
+      } else {
+        setAllProducts([]);
+      }
+      setLoading(false);
+    });
+  }, [activeFilter]);
+
+  const products = searchQuery.trim()
+    ? allProducts.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (p.category?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+      )
+    : allProducts;
 
   return (
     <div>
@@ -115,6 +122,8 @@ export default function GalleryPage() {
                 type="text"
                 placeholder="Search products..."
                 aria-label="Search products"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-ivory/10 border border-ivory/40 rounded-full px-5 py-3 pl-10 w-full text-sm text-ivory placeholder:text-ivory/70 outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus:border-ivory/60 transition-colors duration-300"
               />
             </div>
@@ -126,16 +135,17 @@ export default function GalleryPage() {
       <section className="py-8 px-4 bg-ivory">
         <FadeUp>
           <div className="flex gap-3 justify-center flex-wrap">
-            {filters.map((tab) => (
+            {FILTER_LABELS.map((label) => (
               <button
-                key={tab.label}
+                key={label}
+                onClick={() => setActiveFilter(label)}
                 className={`px-6 py-2.5 rounded-full text-sm font-sans font-medium cursor-pointer transition-all duration-300 uppercase tracking-[0.1em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red ${
-                  tab.active
+                  activeFilter === label
                     ? "bg-signal-red text-pure-white shadow-lg"
                     : "bg-ivory text-ground hover:bg-ground/5 border border-ground/25"
                 }`}
               >
-                {tab.label}
+                {label}
               </button>
             ))}
           </div>
@@ -156,12 +166,32 @@ export default function GalleryPage() {
             />
           </div>
 
-          <ProductGrid
-            products={products}
-            variant="uniform"
-            columns={4}
-            onProductQuickView={handleQuickView}
-          />
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </div>
+          ) : products.length === 0 ? (
+            <div className="py-20 text-center">
+              <p className="text-ground/50 font-sans text-sm">
+                {searchQuery ? `No results for "${searchQuery}"` : "No products found in this category."}
+              </p>
+              <button
+                onClick={() => { setActiveFilter("All"); setSearchQuery(""); }}
+                className="mt-4 text-signal-red font-sans text-sm hover:underline"
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : (
+            <ProductGrid
+              products={products}
+              variant="uniform"
+              columns={4}
+              onProductQuickView={handleQuickView}
+            />
+          )}
         </div>
       </section>
 

@@ -5,6 +5,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import CartDrawer from "./CartDrawer";
+import { supabase } from "../lib/supabaseClient";
+import type { User } from "@supabase/supabase-js";
 
 const links = [
   { href: "/", label: "Home" },
@@ -45,6 +47,19 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const { cartCount, openCart } = useCart();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const initials = user?.user_metadata?.full_name
+    ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
+    : user?.email?.slice(0, 2).toUpperCase() ?? "";
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 50));
@@ -178,6 +193,23 @@ export default function Navbar() {
                 <path strokeLinecap="round" d="m21 21-4.35-4.35" />
               </svg>
             </button>
+
+            {/* Account icon — shows initials if logged in */}
+            <Link
+              href={user ? "/account" : "/auth/sign-in"}
+              className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-ivory/85 hover:text-ivory transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ground rounded-md"
+              aria-label={user ? "My account" : "Sign in"}
+            >
+              {user ? (
+                <span className="w-6 h-6 rounded-full bg-antique-gold/25 border border-antique-gold/50 flex items-center justify-center text-[9px] font-bold text-antique-gold font-sans">
+                  {initials}
+                </span>
+              ) : (
+                <svg className="w-[17px] h-[17px] sm:w-[19px] sm:h-[19px]" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+              )}
+            </Link>
 
             {/* Cart icon with badge — badge positioned relative to the icon itself */}
             <button
@@ -315,22 +347,22 @@ export default function Navbar() {
                   Book Fitting
                 </Link>
                 <div className="flex justify-center gap-5 sm:gap-6">
-                  {[
-                    { href: "/account", label: "Account", d: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" },
-                    { href: "/wishlist", label: "Wishlist", d: "M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" },
-                  ].map((icon) => (
-                    <Link
-                      key={icon.label}
-                      href={icon.href}
-                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
-                      onClick={closeMenu}
-                      aria-label={icon.label}
-                    >
+                  <Link
+                    href={user ? "/account" : "/auth/sign-in"}
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"
+                    onClick={closeMenu}
+                    aria-label={user ? "My Account" : "Sign In"}
+                  >
+                    {user ? (
+                      <span className="w-7 h-7 rounded-full bg-antique-gold/25 border border-antique-gold/50 flex items-center justify-center text-[10px] font-bold text-antique-gold font-sans">
+                        {initials}
+                      </span>
+                    ) : (
                       <svg className="w-5 h-5 sm:w-[22px] sm:h-[22px]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d={icon.d} />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                       </svg>
-                    </Link>
-                  ))}
+                    )}
+                  </Link>
                   {/* Cart button — opens drawer */}
                   <button
                     className="relative min-w-[44px] min-h-[44px] flex items-center justify-center text-ivory/70 hover:text-antique-gold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-antique-gold rounded-md"

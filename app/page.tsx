@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { supabase } from "./lib/supabaseClient";
+import { mapProduct } from "./lib/mapProduct";
 import TrustBadges from "./components/TrustBadges";
 import FadeUp from "./components/animations/FadeUp";
 import TextReveal from "./components/animations/TextReveal";
@@ -11,8 +13,9 @@ import NumberCounter from "./components/animations/NumberCounter";
 import AnimatedStars from "./components/AnimatedStars";
 import ProductGrid from "./components/ProductGrid";
 import ProductQuickView from "./components/ProductQuickView";
+import ProductSkeleton from "./components/ProductSkeleton";
 
-const newArrivals = [
+const fallbackNewArrivals = [
   { src: "/women-maroon-african-dress.jpg", alt: "Maroon African dress", name: "Maroon African Dress", price: "₦45,000" },
   { src: "/men-maroon-stripe.jpg", alt: "Maroon stripe set", name: "Maroon Stripe Set", price: "₦38,000" },
   { src: "/men-pink-agbada.jpg", alt: "Pink agbada", name: "Classic Pink Agbada", price: "₦52,000" },
@@ -25,7 +28,7 @@ const categories = [
   { src: "/hero-woman-brown-outfit.jpg", alt: "Brown outfit", label: "Casual Chic", count: "9 pieces" },
 ];
 
-const testimonials = [
+const fallbackTestimonials = [
   {
     name: "Amara O.",
     role: "Bride",
@@ -112,12 +115,52 @@ export default function Home() {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [arrivalsLoading, setArrivalsLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
 
   const handleQuickView = (product: Product) => {
     setQuickViewProduct(product);
     setIsQuickViewOpen(true);
   };
 
+  // Featured products
+  useEffect(() => {
+    supabase
+      .from("products")
+      .select("*")
+      .eq("featured", true)
+      .eq("in_stock", true)
+      .limit(4)
+      .then(({ data }) => {
+        if (data && data.length > 0) setNewArrivals(data.map(mapProduct));
+        else setNewArrivals(fallbackNewArrivals);
+        setArrivalsLoading(false);
+      });
+  }, []);
+
+  // Approved reviews from DB
+  useEffect(() => {
+    supabase
+      .from("reviews")
+      .select("customer_name, rating, comment")
+      .eq("approved", true)
+      .not("comment", "is", null)
+      .limit(3)
+      .then(({ data }) => {
+        if (data && data.length >= 2) {
+          setTestimonials(
+            data.map((r) => ({
+              name: r.customer_name,
+              role: "Customer",
+              review: r.comment,
+            }))
+          );
+        }
+      });
+  }, []);
+
+  
   return (
     <>
       {/* ------------------------------------------------------------------ */}
@@ -278,12 +321,20 @@ export default function Home() {
           </div>
 
           {/* Asymmetric grid: first item large (2 rows), other 3 smaller */}
-          <ProductGrid
-            products={newArrivals}
-            variant="asymmetric"
-            onProductQuickView={handleQuickView}
-            className="mb-12"
-          />
+          {arrivalsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 mb-12">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <ProductGrid
+              products={newArrivals}
+              variant="asymmetric"
+              onProductQuickView={handleQuickView}
+              className="mb-12"
+            />
+          )}
 
           <FadeUp>
             <div className="flex justify-center mt-12">

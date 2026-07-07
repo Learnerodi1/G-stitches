@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import FadeUp from "../components/animations/FadeUp";
 import ParallaxHero from "../components/animations/ParallaxHero";
 import TextReveal from "../components/animations/TextReveal";
 import { useCart } from "../context/CartContext";
+import { usePaystackPayment } from "react-paystack";
+import { supabase } from "../lib/supabaseClient";
 
 const steps = ["Information", "Payment", "Confirmation"];
 
@@ -17,16 +19,105 @@ const inputClass =
 type PayMethod = "card" | "transfer" | "paypal";
 
 export default function CheckoutPage() {
-  const { items: cartItems, updateQty } = useCart();
+  const { items: cartItems, updateQty, clearCart } = useCart();
   const [payMethod, setPayMethod] = useState<PayMethod>("card");
   const [promoCode, setPromoCode] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const formRef = useRef<HTMLFormElement>(null);
+  // Stable reference per checkout session
+  const [payRef] = useState(() => `gstitches_${Date.now()}`);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
   const shipping = subtotal >= 50000 ? 0 : 3000;
   const total = subtotal + shipping;
   const fmt = (n: number) => `₦${n.toLocaleString()}`;
+
+  const initializePayment = usePaystackPayment({
+    reference: payRef,
+    email,
+    amount: total * 100, // kobo
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+    currency: "NGN",
+  });
+
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    const formElement = formRef.current;
+    if (!formElement) return;
+
+    const formData = new FormData(formElement);
+
+    if (!email) {
+      alert("Please enter your email address.");
+      return;
+    }
+
+    if (!process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY) {
+      alert("Payment gateway is not configured yet. Please contact us to complete your order.");
+      return;
+    }
+
+    const onSuccess = async (reference: { reference: string }) => {
+      setIsSubmitting(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const { data: order } = await supabase
+          .from("orders")
+          .insert({
+            user_id: user?.id ?? null,
+            first_name: formData.get("firstName"),
+            last_name: formData.get("lastName"),
+            email,
+            phone: formData.get("phone"),
+            street_address: formData.get("streetAddress"),
+            city: formData.get("city"),
+            state: formData.get("state"),
+            postal_code: formData.get("postalCode"),
+            subtotal,
+            shipping,
+            total,
+            payment_reference: reference.reference,
+            payment_status: "paid",
+          })
+          .select()
+          .single();
+
+        if (order) {
+          const orderItems = cartItems.map((i) => ({
+            order_id: order.id,
+            name: i.name,
+            size: i.size,
+            price: i.price,
+            quantity: i.qty,
+          }));
+          await supabase.from("order_items").insert(orderItems);
+        }
+      } catch (err) {
+        console.error("Order save error:", err);
+      } finally {
+        setIsSubmitting(false);
+      }
+
+      clearCart();
+      alert(
+        `Order placed successfully!\nReference: ${reference.reference}\n\nThank you for shopping with G-Stitches.`
+      );
+    };
+
+    const onClose = () => {
+      console.log("Payment window closed.");
+    };
+
+    initializePayment({ onSuccess, onClose });
+  };
 
   return (
     <>
@@ -172,6 +263,7 @@ export default function CheckoutPage() {
           {/* ════════════════════════════════════════ */}
           <FadeUp className="order-2 lg:order-1">
             <div className="space-y-8 sm:space-y-10">
+              <form ref={formRef} id="checkout_form">
 
               {/* ── Contact Information ── */}
               <section>
@@ -186,25 +278,32 @@ export default function CheckoutPage() {
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       First Name
                     </label>
-                    <input type="text" placeholder="First name" className={inputClass} />
+                    <input name="firstName" type="text" placeholder="First name" className={inputClass} />
                   </div>
                   <div>
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       Last Name
                     </label>
-                    <input type="text" placeholder="Last name" className={inputClass} />
+                    <input name="lastName" type="text" placeholder="Last name" className={inputClass} />
                   </div>
                   <div>
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       Email Address
                     </label>
-                    <input type="email" placeholder="you@example.com" className={inputClass} />
+                    <input
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={inputClass}
+                    />
                   </div>
                   <div>
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       Phone Number
                     </label>
-                    <input type="tel" placeholder="+234 000 0000 000" className={inputClass} />
+                    <input name="phone" type="tel" placeholder="+234 000 0000 000" className={inputClass} />
                   </div>
                 </div>
               </section>
@@ -225,30 +324,31 @@ export default function CheckoutPage() {
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       Street Address
                     </label>
-                    <input type="text" placeholder="123 Bespoke Lane" className={inputClass} />
+                    <input name="streetAddress" type="text" placeholder="123 Bespoke Lane" className={inputClass} />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                         City
                       </label>
-                      <input type="text" placeholder="Lagos" className={inputClass} />
+                      <input name="city" type="text" placeholder="Lagos" className={inputClass} />
                     </div>
                     <div>
                       <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                         State
                       </label>
-                      <input type="text" placeholder="Lagos State" className={inputClass} />
+                      <input name="state" type="text" placeholder="Lagos State" className={inputClass} />
                     </div>
                   </div>
                   <div>
                     <label className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ivory/65 font-sans block mb-1.5">
                       Postal Code
                     </label>
-                    <input type="text" placeholder="100001" className="w-full sm:w-1/2 bg-ivory/[0.06] border border-antique-gold/25 rounded-lg px-4 py-3.5 text-ivory text-sm font-sans outline-none placeholder:text-ivory/55 focus:border-antique-gold focus-visible:ring-2 focus-visible:ring-antique-gold/40 transition-colors duration-300" />
+                    <input name="postalCode" type="text" placeholder="100001" className="w-full sm:w-1/2 bg-ivory/[0.06] border border-antique-gold/25 rounded-lg px-4 py-3.5 text-ivory text-sm font-sans outline-none placeholder:text-ivory/55 focus:border-antique-gold focus-visible:ring-2 focus-visible:ring-antique-gold/40 transition-colors duration-300" />
                   </div>
                 </div>
               </section>
+              </form>
 
               {/* Divider */}
               <div className="h-px bg-antique-gold/20" />
@@ -422,13 +522,17 @@ export default function CheckoutPage() {
 
                 <motion.button
                   type="button"
-                  className="btn-lift w-full bg-signal-red text-pure-white rounded-full py-4 text-sm font-semibold uppercase tracking-[0.2em] font-sans hover:bg-signal-red/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus-visible:ring-offset-2 focus-visible:ring-offset-ground flex items-center justify-center gap-3 min-h-[52px]"
+                  disabled={isSubmitting}
+                  className="btn-lift w-full bg-signal-red text-pure-white rounded-full py-4 text-sm font-semibold uppercase tracking-[0.2em] font-sans hover:bg-signal-red/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus-visible:ring-offset-2 focus-visible:ring-offset-ground flex items-center justify-center gap-3 min-h-[52px] disabled:opacity-60 disabled:cursor-not-allowed"
                   whileTap={{ scale: 0.98 }}
+                  onClick={handlePlaceOrder}
                 >
-                  Place Order
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                  {isSubmitting ? "Processing…" : "Place Order"}
+                  {!isSubmitting && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  )}
                 </motion.button>
 
                 <div className="flex items-center justify-center gap-2 text-ivory/55 text-xs font-sans mt-3">
@@ -571,13 +675,17 @@ export default function CheckoutPage() {
               {/* Place Order CTA */}
               <motion.button
                 type="button"
-                className="btn-lift w-full bg-signal-red text-pure-white rounded-full py-4 text-sm font-semibold uppercase tracking-[0.2em] font-sans hover:bg-signal-red/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus-visible:ring-offset-2 focus-visible:ring-offset-ground flex items-center justify-center gap-3 min-h-[52px]"
+                disabled={isSubmitting}
+                className="btn-lift w-full bg-signal-red text-pure-white rounded-full py-4 text-sm font-semibold uppercase tracking-[0.2em] font-sans hover:bg-signal-red/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-red focus-visible:ring-offset-2 focus-visible:ring-offset-ground flex items-center justify-center gap-3 min-h-[52px] disabled:opacity-60 disabled:cursor-not-allowed"
                 whileTap={{ scale: 0.98 }}
+                onClick={handlePlaceOrder}
               >
-                Place Order
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                {isSubmitting ? "Processing…" : "Place Order"}
+                {!isSubmitting && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                )}
               </motion.button>
 
               {/* Trust badge */}

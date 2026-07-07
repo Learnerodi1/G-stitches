@@ -5,6 +5,8 @@ import Footer from "./components/Footer";
 import ScrollProgressBar from "./components/animations/ScrollProgressBar";
 import Providers from "./components/Providers";
 import "./globals.css";
+import Script from "next/script";
+// inside the <body>, before {children} or anywhere in <head>:
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,6 +39,7 @@ export default function RootLayout({
         <Providers>
           <ScrollProgressBar />
           <Navbar />
+          <Script src="https://js.paystack.co/v1/inline.js" strategy="beforeInteractive" />
           <main className="flex-1 pt-[72px] sm:pt-[80px] md:pt-[88px]">{children}</main>
           <Footer />
         </Providers>
